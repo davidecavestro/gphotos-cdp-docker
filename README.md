@@ -1,11 +1,11 @@
 # docker-gphotos-cdp
 
-A container image based on [gphotos-cdp](https://github.com/perkeep/gphotos-cdp) and [chromedp/headless-shell](https://github.com/chromedp/docker-headless-shell) to download items from Google Photos with their original geo-location attributes.
+A container image based on [gphotos-cdp](https://github.com/perkeep/gphotos-cdp) and [chromedp/headless-shell](https://github.com/chromedp/docker-headless-shell) to download items from Google Photos with their original geo-location attributes, at original quality.
 
 
-# Example usage
+## Example usage
 
-## Create a browser profile
+### Create a browser profile
 
 Launch the browser with a profile from scratch into an empty folder and complete the authentication.
 ```bash
@@ -19,9 +19,10 @@ google-chrome \
 Close the browser: the folder you chose is enough to open a headless browser and access your photos.
 
 
-## Configure docker compose
+### Configure docker compose
 
-Launch the container mounting the profile folder and the directory where you want to
+Launch the container mounting the profile folder and the directory where
+you want to download your stuff
 
 ```compose.yml
 ---
@@ -43,9 +44,13 @@ services:
 ```
 
 
-# Schedule with crontab
+## Schedule from your host crontab
 
 Configure it so that running `crontab -l` reveals:
 ```bash
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
+
+## Credits
+
+Heavily inspired by https://github.com/JakeWharton/docker-gphotos-sync.
