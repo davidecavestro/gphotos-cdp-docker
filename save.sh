@@ -22,8 +22,7 @@ cd $PARENT_DIR
 rsync \
   -av \
   --remove-source-files \
-  --include='*/' \
   --include='20[0-9][0-9]/' --include='20[0-9][0-9]/20[0-9][0-9]-[0-1][0-9]/' \
   . $DEST_DIR
 
-#rm -rf $PARENT_DIR
+rm -rf $PARENT_DIR
