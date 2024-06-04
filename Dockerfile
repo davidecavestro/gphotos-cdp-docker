@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
       rsync \
       locales \
       tree \
+      file \
       ffmpeg \
       && rm -rf /var/lib/apt/lists/*
 

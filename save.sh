@@ -79,7 +79,8 @@ function do_video () {
 base=$(basename $1)
 if [[ ! $base =~ $IGNORE_REGEX ]]; then
   echo "Processing: $1"
-  mimetype=$(mimetype -b "$1")
+#  mimetype=$(mimetype -b "$1")
+  mimetype=$(file --mime-type --no-pad $1| awk '{print  $2}')
 
   case $mimetype in
     image/*)
