@@ -142,9 +142,10 @@ if [[ ! $base =~ $IGNORE_REGEX ]]; then
       ;;
     *)
       echo "$1 is neither an image nor a video"
+      rm -rf $(dirname $1)
       ;;
   esac
 else
-  echo "discarding $1"
-  rm -f $1
+  echo "Discarding $1"
+  rm -rf $(dirname $1)
 fi
