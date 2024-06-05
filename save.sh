@@ -44,6 +44,7 @@ function do_video () {
   
   local creation_time=$(ffprobe -v quiet -print_format json -show_entries format_tags=creation_time "$FILE" | jq -r '.format.tags.creation_time')
 
+  local filename=$(basename $FILE)
   # If creation_time is not available, try getting it from filename
   if [[ "$creation_time" == "null" || -z "$creation_time" ]]; then
     # Use regex to match the encoded timestamp in the filename
