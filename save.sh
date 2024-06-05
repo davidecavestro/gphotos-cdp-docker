@@ -145,5 +145,6 @@ if [[ ! $base =~ $IGNORE_REGEX ]]; then
       ;;
   esac
 else
-  echo "Ignoring $1"
+  echo "discarding $1"
+  rm -f $1
 fi
