@@ -43,7 +43,28 @@ function do_video () {
   #location=$(echo $json | jq -r .format.tags.location)
   
   local creation_time=$(ffprobe -v quiet -print_format json -show_entries format_tags=creation_time "$FILE" | jq -r '.format.tags.creation_time')
-  
+
+  # If creation_time is not available, try getting it from filename
+  if [[ "$creation_time" == "null" || -z "$creation_time" ]]; then
+    # Use regex to match the encoded timestamp in the filename
+    if [[ $filename =~ ^FILE([0-9]{6})-([0-9]{6}) ]]; then
+      # Extract the encoded date and time
+      encoded_date=${BASH_REMATCH[1]}
+      encoded_time=${BASH_REMATCH[2]}
+      
+      # Extract year, month, day, hour, minute, second
+      year="20${encoded_date:0:2}"
+      month=${encoded_date:2:2}
+      day=${encoded_date:4:2}
+      hour=${encoded_time:0:2}
+      minute=${encoded_time:2:2}
+      second=${encoded_time:4:2}
+      
+      # Create a formatted timestamp
+      creation_time="$year-$month-$day $hour:$minute:$second"
+    fi
+  fi
+
   # If creation_time is not available, use file modification time
   if [[ "$creation_time" == "null" || -z "$creation_time" ]]; then
 #    creation_time=$(stat -c %y "$file")
@@ -51,7 +72,7 @@ function do_video () {
   else
     # Extract year and month from the creation time
     local year=$(date -d "$creation_time" +"%Y")
-    local month=$(date -d "$creation_time" +"%Y-%m")
+    local month=$(date -d "$creation_time" +"%m")
     
     # Create target directory if it doesn't exist
     local target_dir="${PARENT_DIR}/${year}/${year}-${month}"
