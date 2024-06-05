@@ -16,7 +16,7 @@ function do_image () {
 
   echo "PARENT_DIR: $PARENT_DIR"
 
-  local creation_time=$(exiftool -CreateDate -d "%Y-%m-%d %H:%M:%S" "$FILE" | awk -F ': ' '{print $2}')
+  local creation_time=$(exiftool -DateTimeOriginal -d "%Y-%m-%d %H:%M:%S" "$FILE" | awk -F ': ' '{print $2}')
 
   local filename=$(basename $FILE)
   # If creation_time is not available, try getting it from filename
@@ -37,6 +37,14 @@ function do_image () {
       
       # Create a formatted timestamp
       creation_time="$year-$month-$day $hour:$minute:$second"
+
+      exiftool "-DateTimeOriginal=${creation_time}" -overwrite_original "$FILE"
+      # Check if the command was successful
+      if [[ $? -eq 0 ]]; then
+        echo "DateTimeOriginal has been set to $creation_time for $FILE"
+      else
+        echo "Failed to set DateTimeOriginal for $FILE"
+      fi
     fi
   fi
 
@@ -44,7 +52,7 @@ function do_image () {
   exiftool "-DateTimeOriginal>FileModifyDate" $FILE
 
   # move file to proper subdir
-  exiftool  -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${CreateDate}' '-filename<${filename}' $FILE
+  exiftool  -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${DateTimeOriginal}' '-filename<${filename}' $FILE
 
   # move to destination folder
   cd $PARENT_DIR
