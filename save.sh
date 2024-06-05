@@ -15,6 +15,31 @@ function do_image () {
   local PARENT_DIR=$(dirname $FILE)
 
   echo "PARENT_DIR: $PARENT_DIR"
+
+  local creation_time=$(exiftool -CreateDate -d "%Y-%m-%d %H:%M:%S" "$FILE" | awk -F ': ' '{print $2}')
+
+  local filename=$(basename $FILE)
+  # If creation_time is not available, try getting it from filename
+  if [[ -z "$creation_time" ]]; then
+    # Use regex to match the encoded timestamp in the filename
+    if [[ $filename =~ ^.*([0-9]{8})_([0-9]{6}).* ]]; then
+      # Extract the encoded date and time
+      encoded_date=${BASH_REMATCH[1]}
+      encoded_time=${BASH_REMATCH[2]}
+      
+      # Extract year, month, day, hour, minute, second
+      year="${encoded_date:0:4}"
+      month=${encoded_date:4:2}
+      day=${encoded_date:6:2}
+      hour=${encoded_time:0:2}
+      minute=${encoded_time:2:2}
+      second=${encoded_time:4:2}
+      
+      # Create a formatted timestamp
+      creation_time="$year-$month-$day $hour:$minute:$second"
+    fi
+  fi
+
   # set file time
   exiftool "-DateTimeOriginal>FileModifyDate" $FILE
 
@@ -38,10 +63,6 @@ function do_video () {
 
   echo "PARENT_DIR: $PARENT_DIR"
 
-  #json=$(ffprobe -v quiet -print_format json -show_format $1)
-  #creation_time=$(echo $json | jq -r .format.tags.creation_time)
-  #location=$(echo $json | jq -r .format.tags.location)
-  
   local creation_time=$(ffprobe -v quiet -print_format json -show_entries format_tags=creation_time "$FILE" | jq -r '.format.tags.creation_time')
 
   local filename=$(basename $FILE)
