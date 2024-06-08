@@ -94,12 +94,12 @@ function do_video () {
       creation_time="$year-$month-${day}T$hour:$minute:$second"
 
       # Set the creation_time attribute
-      ffmpeg -i "v" -metadata creation_time="$creation_time" -codec copy "${$FILE%.*}_new.${$FILE##*.}"
+      ffmpeg -i "${FILE}" -metadata creation_time="$creation_time" -codec copy "${FILE%.*}_new.${FILE##*.}"
 
       # Check if the command was successful
       if [[ $? -eq 0 ]]; then
         echo "creation_time has been set to $creation_time for $FILE"
-        mv "${FILE%.*}_new.${FILE##*.}" "$file_path"
+        mv "${FILE%.*}_new.${FILE##*.}" "$FILE"
       else
         echo "Failed to set creation_time for $FILE"
       fi
