@@ -1,13 +1,19 @@
 #!/bin/env bash
-
-#pwd
-
-#ls -lha $FILE
+# Moves photo and video files to a per "year/year-month" folder structure
+#
+# For every file the creation date/time is extracted from metadata
+# when not available, it is extracted as timestamp from the filename
+#
+# Supported env vars
+# DEST_DIR: the destination folder path, eventually containing a folder per year (mandatory)
+# IGNORE_REGEX: bash regex for files to ignore
+#
+# Supported arguments:
+# 1. file to process
 
 DEST_DIR='' : "${DEST_DIR:?DEST_DIR is not set}"
 [ -d "$DEST_DIR" ] || { echo "DEST_DIR does not exist: $DEST_DIR"; exit 2; }
 
-#IGNORE_REGEX="${IGNORE_REGEX:-(^(Screenshot_|VID-).*)|(.*(MV-PANO|COLLAGE|-ANIMATION|-EFFECTS)\..*)}"
 IGNORE_REGEX="${IGNORE_REGEX:-.*(MV-PANO|COLLAGE|-ANIMATION|-EFFECTS)\..*)}"
 
 function do_image () {
@@ -48,19 +54,28 @@ function do_image () {
     fi
   fi
 
-  # set file time
-  exiftool "-DateTimeOriginal>FileModifyDate" $FILE
+  creation_time=$(exiftool -DateTimeOriginal -d "%Y-%m-%d %H:%M:%S" "$FILE" | awk -F ': ' '{print $2}')
 
-  # move file to proper subdir
-  exiftool  -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${DateTimeOriginal}' '-filename<${filename}' $FILE
+  # If creation_time is not available, move it to root
+  if [[ "$creation_time" == "null" || -z "$creation_time" ]]; then
+    echo "$FILE has no creation_time"
+    mv "$FILE" "${PARENT_DIR}/"
+  else
 
-  # move to destination folder
-  cd $PARENT_DIR
-  rsync \
-    -av \
-    --remove-source-files \
-    --include='20[0-9][0-9]/' --include='20[0-9][0-9]/20[0-9][0-9]-[0-1][0-9]/' \
-    . $DEST_DIR
+    # set file time
+    exiftool "-DateTimeOriginal>FileModifyDate" $FILE
+
+    # move file to proper subdir
+    exiftool  -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${DateTimeOriginal}' '-filename<${filename}' $FILE
+
+    # move to destination folder
+    cd $PARENT_DIR
+    rsync \
+      -av \
+      --remove-source-files \
+      --include='20[0-9][0-9]/' --include='20[0-9][0-9]/20[0-9][0-9]-[0-1][0-9]/' \
+      . $DEST_DIR
+  fi
 
   rm -rf $PARENT_DIR
 }
@@ -106,10 +121,10 @@ function do_video () {
     fi
   fi
 
-  # If creation_time is not available, use file modification time
+  # If creation_time is not available, move it to root
   if [[ "$creation_time" == "null" || -z "$creation_time" ]]; then
-#    creation_time=$(stat -c %y "$file")
     echo "$FILE has no creation_time"
+    mv "$FILE" "${PARENT_DIR}/"
   else
     # Extract year and month from the creation time
     local year=$(date -d "$creation_time" +"%Y")
@@ -141,7 +156,6 @@ function do_video () {
 base=$(basename $1)
 if [[ ! $base =~ $IGNORE_REGEX ]]; then
   echo "Processing: $1"
-#  mimetype=$(mimetype -b "$1")
   mimetype=$(file --mime-type --no-pad $1| awk '{print  $2}')
 
   case $mimetype in
