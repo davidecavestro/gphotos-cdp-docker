@@ -3,7 +3,7 @@
 A container image based on [gphotos-cdp](https://github.com/perkeep/gphotos-cdp) and [chromedp/headless-shell](https://github.com/chromedp/docker-headless-shell) to download items from Google Photos with their original geo-location attributes, at original quality.
 
 By default each download file gets passed to _[save.sh](save.sh)_ which detects its type, extracts the _creation date/time_ and moves it to a `year/ywar-month` subfolder within a _target_ directory.
-Any other script can be mounted with cusstom logic.
+Any other script can be mounted with any custom logic.
 
 
 ## Example usage
