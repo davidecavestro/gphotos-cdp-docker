@@ -8,7 +8,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -47,3 +47,27 @@ jobs:
             davidecavestro/gphotos-cdp:${{ env.VERSION }}
             davidecavestro/gphotos-cdp:latest
         if: startsWith(github.ref, 'refs/tags/')
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    permissions: write-all
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: v${{ github.ref_name }}
+          body: |
+            This release provides the container image:
+            `ghcr.io/davidecavestro/gphotos-cdp:${{ github.ref_name }}`
+          draft: false
+          prerelease: false
