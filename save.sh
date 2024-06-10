@@ -79,7 +79,6 @@ function do_image () {
     echo "Moved image to $local_path"
 
     local obsoleted_file=$(find "$DEST_DIR" -wholename "*/$local_path")
-    echo "obsoleted_file: $obsoleted_file"
     local prevent_sync=""
     if [[ -z "$obsoleted_file" ]]; then
       echo "No overwrite dilemma for $local_path"
