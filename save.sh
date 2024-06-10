@@ -62,19 +62,47 @@ function do_image () {
     mv "$FILE" "${PARENT_DIR}/"
   else
 
+    # check if downloaded file has GPS data
+    local has_gps=$(exiftool $FILE | grep GPS)
+
     # set file time
     exiftool "-DateTimeOriginal>FileModifyDate" $FILE
 
     # move file to proper subdir
-    exiftool  -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${DateTimeOriginal}' '-filename<${filename}' $FILE
+    exiftool -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${DateTimeOriginal}' '-filename<${filename}' $FILE
 
     # move to destination folder
     cd $PARENT_DIR
-    rsync \
-      -av \
-      --remove-source-files \
-      --include='20[0-9][0-9]/' --include='20[0-9][0-9]/20[0-9][0-9]-[0-1][0-9]/' \
-      . $DEST_DIR
+
+    local new_filepath=$(find -name "$filename")
+    local local_path=${new_filepath#"./"}
+    echo "Moved image to $local_path"
+
+    local obsoleted_file=$(find "$DEST_DIR" -wholename "*/$local_path")
+    echo "obsoleted_file: $obsoleted_file"
+    local prevent_sync=""
+    if [[ -z "$obsoleted_file" ]]; then
+      echo "No overwrite dilemma for $local_path"
+    elif [[ -z "$has_gps" ]]; then
+      echo "Checking if the overwrite of $obsoleted_file would cause loss of GPS data"
+      # check if existing file has GPS data
+      local target_has_gps=$(exiftool $new_filepath | grep GPS)
+      if [[ -z "$target_has_gps" ]]; then
+        prevent_sync="target GPS data would be lost"
+      fi
+    else
+      echo "Downloaded file has GPS data"
+    fi
+
+    if [[ -z "$prevent_sync" ]]; then
+      rsync \
+        -av \
+        --remove-source-files \
+        --include='20[0-9][0-9]/' --include='20[0-9][0-9]/20[0-9][0-9]-[0-1][0-9]/' \
+        . $DEST_DIR
+    else
+      echo "No rsync as $prevent_sync"
+    fi
   fi
 
   rm -rf $PARENT_DIR

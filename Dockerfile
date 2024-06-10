@@ -11,6 +11,10 @@ RUN go install github.com/perkeep/gphotos-cdp@${COMMIT}
 
 FROM chromedp/headless-shell:latest
 
+LABEL org.opencontainers.image.source "https://github.com/davidecavestro/docker-gphotos-cdp"
+LABEL org.opencontainers.image.description "Download photos and videos from your account without loosing geo-location attributes"
+LABEL org.opencontainers.image.licenses "BSD 3-Clause License"
+
 RUN apt-get update && apt-get install -y \
       exiftool \
       curl \
