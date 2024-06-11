@@ -2,15 +2,15 @@
 
 A container image based on [gphotos-cdp](https://github.com/perkeep/gphotos-cdp) and [chromedp/headless-shell](https://github.com/chromedp/docker-headless-shell) to download photos and videos from your account without loosing geo-location attributes.
 
-By default each download file gets passed to _[save.sh](save.sh)_ which detects its type, extracts the _creation date/time_ and moves it to a `year/ywar-month` subfolder within a _target_ directory.
-Any other script can be mounted with your own custom logic.
+By default each downloaded file is passed to _[save.sh](save.sh)_ which detects its type, extracts the _creation date/time_ and moves it to a `year/ywar-month` subfolder within a _target_ directory.
+Default logic can be easily overridden mounting a script with any other custom logic.
 
 
 ## Example usage
 
 ### Create a browser profile
 
-Launch the browser with a profile from scratch into an empty folder and complete the authentication.
+Launch the browser with a profile from scratch into an empty folder, then complete the authentication.
 ```bash
 google-chrome \
   --user-data-dir=/path/to/gphotos/profile_family \
@@ -49,7 +49,7 @@ services:
 
 ## Schedule from your host crontab
 
-Configure it so that running `crontab -l` reveals:
+Optionally configure cron, i.e. for me running `crontab -l` reveals:
 ```bash
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
