@@ -19,7 +19,7 @@ google-chrome \
   --use-mock-keychain \
   https://photos.google.com/
 ```
-Close the browser: the folder you chose is enough to open a headless browser and access your photos.
+Close the browser: now the folder you chose has the credentials needed to open a headless browser and access your photos.
 
 
 ### Configure docker compose

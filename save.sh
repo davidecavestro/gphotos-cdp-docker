@@ -123,7 +123,7 @@ function do_video () {
       # Extract the encoded date and time
       encoded_date=${BASH_REMATCH[1]}
       encoded_time=${BASH_REMATCH[2]}
-      
+
       # Extract year, month, day, hour, minute, second
       year="20${encoded_date:0:2}"
       month=${encoded_date:2:2}
@@ -131,7 +131,7 @@ function do_video () {
       hour=${encoded_time:0:2}
       minute=${encoded_time:2:2}
       second=${encoded_time:4:2}
-      
+
       # Create a formatted timestamp
       creation_time="$year-$month-${day}T$hour:$minute:$second"
 
@@ -156,14 +156,14 @@ function do_video () {
     # Extract year and month from the creation time
     local year=$(date -d "$creation_time" +"%Y")
     local month=$(date -d "$creation_time" +"%m")
-    
+
     # Create target directory if it doesn't exist
     local target_dir="${PARENT_DIR}/${year}/${year}-${month}"
     mkdir -p "${target_dir}"
-    
+
     # Move the file to the target directory
     mv "$FILE" "${target_dir}/"
-    
+
     echo "Moved $FILE to $target_dir/"
 
     # move to destination folder
@@ -175,7 +175,7 @@ function do_video () {
       . $DEST_DIR
 
   fi
-  
+
   rm -rf $PARENT_DIR
 }
 
