@@ -23,6 +23,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+ 
       - name: Extract version number
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
@@ -44,6 +51,8 @@ jobs:
           tags: |
             davidecavestro/gphotos-cdp:dev-main
             davidecavestro/gphotos-cdp:${{ github.sha }}
+            ghcr.io/davidecavestro/gphotos-cdp:dev-main
+            ghcr.io/davidecavestro/gphotos-cdp:${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
         if: github.ref == 'refs/heads/main'
@@ -56,6 +65,8 @@ jobs:
           tags: |
             davidecavestro/gphotos-cdp:${{ env.VERSION }}
             davidecavestro/gphotos-cdp:latest
+            ghcr.io/davidecavestro/gphotos-cdp:${{ env.VERSION }}
+            ghcr.io/davidecavestro/gphotos-cdp:latest
         if: startsWith(github.ref, 'refs/tags/')
 
   create-release:
@@ -85,7 +96,7 @@ jobs:
           release_name: v${{ github.ref_name }}
           body: |
             This release provides the container image:
-            `ghcr.io/davidecavestro/gphotos-cdp:${{ github.ref_name }}`
+            `davidecavestro/gphotos-cdp:${{ github.ref_name }}`
             ${{ steps.changelog.outputs.changes }}
           draft: false
           prerelease: false
