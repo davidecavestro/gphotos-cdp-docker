@@ -33,7 +33,7 @@ version: "3"
 
 services:
   gphoto:
-    image: davidecavestro/gphotos-cdp:dev-main
+    image: davidecavestro/gphotos-cdp:latest
 #    command: -start https://photos.google.com/photo/abcd1234...
     working_dir: /download
     volumes:
@@ -42,6 +42,8 @@ services:
     - /Volume1/Photos/data_gphotos:/dest
     environment:
     - DEST_DIR=/dest
+#    - TZ=Europe/Rome
+#    - IGNORE_REGEX=(^(Screenshot_|VID-).*)|(.*(MV-PANO|COLLAGE|-ANIMATION|-EFFECTS)\..*)
     restart: no
 
 ```
