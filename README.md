@@ -56,6 +56,11 @@ Optionally configure cron, i.e. for me running `crontab -l` reveals:
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
 
+## Image project home
+
+https://github.com/davidecavestro/gphotos-cdp-docker
+
+
 ## Credits
 
 Heavily inspired by https://github.com/JakeWharton/docker-gphotos-sync.
