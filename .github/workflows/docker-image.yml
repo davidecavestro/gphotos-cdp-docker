@@ -43,11 +43,22 @@ jobs:
           push: true
           tags: |
             davidecavestro/gphotos-cdp:${{ github.ref_name }}
-            davidecavestro/gphotos-cdp:latest
             ghcr.io/davidecavestro/gphotos-cdp:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Push latest image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            davidecavestro/gphotos-cdp:latest
             ghcr.io/davidecavestro/gphotos-cdp:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+        if: startsWith(github.ref, 'refs/tags/')
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v4
