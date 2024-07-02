@@ -48,13 +48,51 @@ services:
 
 ```
 
-
 ## Schedule from your host crontab
 
 Optionally configure cron, i.e. for me running `crontab -l` reveals:
 ```bash
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
+
+## Schedule with chadburn
+
+I currently prefer scheduling from [chadburn](https://github.com/PremoWeb/chadburn) container
+
+```compose.yml
+---
+version: "3"
+
+services:
+  chadburn:
+    image: premoweb/chadburn:latest
+    depends_on:
+    - gphoto
+    command: daemon
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+  gphoto:
+    image: davidecavestro/gphotos-cdp:latest
+#    command: -start https://photos.google.com/photo/abcd1234...
+    working_dir: /download
+    volumes:
+    - /etc/localtime:/etc/localtime
+    - /path/to/gphotos/profile_family:/tmp/gphotos-cdp
+    - /Volume1/Photos/data_gphotos:/dest
+    environment:
+    - DEST_DIR=/dest
+#    - TZ=Europe/Rome
+#    - IGNORE_REGEX=(^(Screenshot_|VID-).*)|(.*(MV-PANO|COLLAGE|-ANIMATION|-EFFECTS)\..*)
+    restart: no
+    entrypoint: ["sleep", "99999d"]
+    labels:
+      chadburn.enabled: "true"
+      chadburn.job-exec.synccron.schedule: "@hourly"
+      chadburn.job-exec.synccron.command: "date && /usr/local/bin/gphotos-cdp -v -dev -headless -dldir /download -run /usr/local/bin/save.sh"
+      chadburn.job-exec.synccron.no-overlap: "true"
+
+```
+
 
 ## Image project home
 
