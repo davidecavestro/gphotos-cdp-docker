@@ -2,7 +2,7 @@
 
 A container image based on [gphotos-cdp](https://github.com/perkeep/gphotos-cdp) and [chromedp/headless-shell](https://github.com/chromedp/docker-headless-shell) to download photos and videos from your account without loosing geo-location attributes.
 
-By default each downloaded file is passed to _[save.sh](save.sh)_ which detects its type, extracts the _creation date/time_ and moves it to a `year/ywar-month` subfolder within a _target_ directory.
+By default each downloaded file is passed to _[save.sh](save.sh)_ which detects its type, extracts the _creation date/time_ and moves it to a `year/year-month` subfolder within a _target_ directory.
 Default logic can be easily overridden mounting a script with any other custom logic.
 
 
