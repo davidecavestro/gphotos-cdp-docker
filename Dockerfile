@@ -1,9 +1,9 @@
 FROM golang:1.20.5-bullseye AS build
-ARG COMMIT=53afb72ae12955edaac20533d9fcfda12b630336
 
 ENV GO111MODULE=on
-RUN go install github.com/perkeep/gphotos-cdp@${COMMIT}
-
+RUN git clone https://github.com/davidecavestro/gphotos-cdp.git /ws
+WORKDIR /ws
+RUN go build
 
 FROM chromedp/headless-shell:latest
 
@@ -30,7 +30,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8   
 
 # copy tool binary
-COPY --from=build /go/bin/gphotos-cdp /usr/local/bin/
+COPY --from=build /ws/gphotos-cdp /usr/local/bin/
 # copy default script
 COPY save.sh /usr/local/bin/
 
