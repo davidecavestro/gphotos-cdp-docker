@@ -1,8 +1,8 @@
 FROM golang:1.20.5-bullseye AS build
 
 ENV GO111MODULE=on
-RUN git clone https://github.com/davidecavestro/gphotos-cdp.git /ws
-WORKDIR /ws
+COPY repo /repo
+WORKDIR /repo
 RUN go build
 
 FROM chromedp/headless-shell:latest
@@ -30,7 +30,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8   
 
 # copy tool binary
-COPY --from=build /ws/gphotos-cdp /usr/local/bin/
+COPY --from=build /repo/gphotos-cdp /usr/local/bin/
 # copy default script
 COPY save.sh /usr/local/bin/
 

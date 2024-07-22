@@ -35,6 +35,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
  
+      - name: Clone repo to build
+        run: git clone https://github.com/davidecavestro/gphotos-cdp.git repo
+
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
