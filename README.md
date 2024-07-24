@@ -48,14 +48,14 @@ services:
 
 ```
 
-## Schedule from your host crontab
+### Schedule from your host crontab
 
 Optionally configure cron, i.e. for me running `crontab -l` reveals:
 ```bash
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
 
-## Schedule with chadburn
+### Schedule with chadburn
 
 I currently prefer scheduling from [chadburn](https://github.com/PremoWeb/chadburn) container
 
@@ -93,6 +93,29 @@ services:
 
 ```
 
+## How to build locally
+
+The Dockerfile currently builds gphotos-cdp from a locally cloned repo
+(a fork with some customizations) but avoids actually cloning it, while
+the automated build on GH has a dedicated clone step.
+
+Locally I simply symlink the repo with `ln -s ../gphotos-cdp repo`
+and resolve the link using tar `tar -ch . | docker build --progress plain --no-cache -t foo -`
+
+Then I test it with
+
+```bash
+docker run \
+  --rm -it -u $(id -u):$(id -g) \
+  -e DEST_DIR=/dest \
+  -v $(pwd)/profile_famiglia:/tmp/gphotos-cdp/ \
+  -v $(pwd)/download:/download \
+  -v $(pwd)/dest:/dest \
+  -w /download \
+  --entrypoint /usr/local/bin/gphotos-cdp \
+  --cap-add=SYS_ADMIN foo \
+  -v -dev -headless -dldir /download -dltimeout 3 -run /usr/local/bin/save.sh
+```
 
 ## Image project home
 

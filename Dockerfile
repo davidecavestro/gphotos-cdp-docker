@@ -5,7 +5,7 @@ COPY repo /repo
 WORKDIR /repo
 RUN go build
 
-FROM chromedp/headless-shell:latest
+FROM chromedp/headless-shell:128.0.6601.2
 
 LABEL org.opencontainers.image.source "https://github.com/davidecavestro/docker-gphotos-cdp"
 LABEL org.opencontainers.image.description "Download photos and videos from your account without loosing geo-location attributes"
