@@ -96,8 +96,8 @@ services:
 ## How to build locally
 
 The Dockerfile currently builds gphotos-cdp from a locally cloned repo
-(a fork with some customizations) but avoids actually cloning it, while
-the automated build on GH has a dedicated clone step.
+([a fork](https://github.com/davidecavestro/gphotos-cdp) with some customizations) but avoids cloning it directly;
+instead the automated build on GH has a dedicated clone step.
 
 Locally I simply symlink the repo with `ln -s ../gphotos-cdp repo`
 and resolve the link using tar `tar -ch . | docker build --progress plain --no-cache -t foo -`
