@@ -32,7 +32,7 @@ function do_image () {
       # Extract the encoded date and time
       encoded_date=${BASH_REMATCH[1]}
       encoded_time=${BASH_REMATCH[2]}
-      
+
       # Extract year, month, day, hour, minute, second
       year="${encoded_date:0:4}"
       month=${encoded_date:4:2}
@@ -40,7 +40,7 @@ function do_image () {
       hour=${encoded_time:0:2}
       minute=${encoded_time:2:2}
       second=${encoded_time:4:2}
-      
+
       # Create a formatted timestamp
       creation_time="$year-$month-$day $hour:$minute:$second"
 

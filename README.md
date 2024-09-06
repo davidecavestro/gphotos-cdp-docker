@@ -55,9 +55,12 @@ Optionally configure cron, i.e. for me running `crontab -l` reveals:
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
 
-### Schedule with chadburn
+### Schedule with chadburn and expose a chromium for relogins
 
-I currently prefer scheduling from [chadburn](https://github.com/PremoWeb/chadburn) container
+I currently prefer scheduling from [chadburn](https://github.com/PremoWeb/chadburn) container.
+I've also added a containerized chromium, configured to share the profile, that can be used to
+renew the session when tokens expire. The _containerized browser_ is reachable at the specified
+port from the _host browser_, i.e. at http://localhost:3000.
 
 ```compose.yml
 ---
@@ -90,7 +93,20 @@ services:
       chadburn.job-exec.synccron.schedule: "@hourly"
       chadburn.job-exec.synccron.command: "date && /usr/local/bin/gphotos-cdp -v -dev -headless -dldir /download -run /usr/local/bin/save.sh"
       chadburn.job-exec.synccron.no-overlap: "true"
-
+  chromium:
+    image: lscr.io/linuxserver/chromium:latest
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Rome
+      - CHROME_CLI=--no-sandbox https://photos.google.com/
+    volumes:
+      - /path/to/gphotos/profile_family:/config/.config/chromium
+    ports:
+      - 3000:3000
+    shm_size: 1gb
 ```
 
 ## How to build locally
