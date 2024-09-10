@@ -58,7 +58,7 @@ Optionally configure cron, i.e. for me running `crontab -l` reveals:
 ### Schedule with chadburn and expose a chromium for relogins
 
 I currently prefer scheduling from [chadburn](https://github.com/PremoWeb/chadburn) container.
-I've also added a containerized chromium, configured to share the profile, that can be used to
+I've also added a containerized browser, configured to share the profile, that can be used to
 renew the session when tokens expire. The _containerized browser_ is reachable at the specified
 port from the _host browser_, i.e. at http://localhost:3000.
 
@@ -93,20 +93,21 @@ services:
       chadburn.job-exec.synccron.schedule: "@hourly"
       chadburn.job-exec.synccron.command: "date && /usr/local/bin/gphotos-cdp -v -dev -headless -dldir /download -run /usr/local/bin/save.sh"
       chadburn.job-exec.synccron.no-overlap: "true"
-  chromium:
-    image: lscr.io/linuxserver/chromium:latest
-    security_opt:
-      - seccomp:unconfined
+  chrome:
+    image: kasmweb/chrome:1.15.0-rolling
     environment:
       - PUID=0
       - PGID=0
       - TZ=Europe/Rome
-      - CHROME_CLI=--no-sandbox https://photos.google.com/
+      - LAUNCH_URL=https://photos.google.com/
     volumes:
-      - /path/to/gphotos/profile_family:/config/.config/chromium
+      - /path/to/gphotos/profile_family:/home/kasm-user/.config/google-chrome/
     ports:
-      - 3000:3000
-    shm_size: 1gb
+      - 6901:6901
+    shm_size: 512mb
+    restart: unless-stopped
+    profiles:
+      - relogin
 ```
 
 ## How to build locally
