@@ -78,6 +78,7 @@ services:
     image: davidecavestro/gphotos-cdp:latest
 #    command: -start https://photos.google.com/photo/abcd1234...
     working_dir: /download
+    user: ${UID}:${GID}
     volumes:
     - /etc/localtime:/etc/localtime
     - /path/to/gphotos/profile_family:/tmp/gphotos-cdp
@@ -95,9 +96,9 @@ services:
       chadburn.job-exec.synccron.no-overlap: "true"
   chrome:
     image: kasmweb/chrome:1.15.0-rolling
+    user: ${UID}:${GID}
     environment:
-      - PUID=0
-      - PGID=0
+      - VNC_PW=${VNC_PW}
       - TZ=Europe/Rome
       - LAUNCH_URL=https://photos.google.com/
     volumes:
