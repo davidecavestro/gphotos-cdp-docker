@@ -55,7 +55,7 @@ Optionally configure cron, i.e. for me running `crontab -l` reveals:
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
 
-### Schedule with chadburn and expose a chromium for relogins
+### Schedule with chadburn and expose a browser for relogins
 
 I currently prefer scheduling from [chadburn](https://github.com/PremoWeb/chadburn) container.
 I've also added a containerized browser, configured to share the profile, that can be used to
@@ -110,6 +110,9 @@ services:
     profiles:
       - relogin
 ```
+
+Please note in the above example the browser is not started automatically, unless
+the _relogin_ profile is activated.
 
 ## How to build locally
 
