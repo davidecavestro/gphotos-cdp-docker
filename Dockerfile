@@ -1,11 +1,11 @@
-FROM golang:1.20.5-bullseye AS build
+FROM golang:1.23.3-bullseye AS build
 
 ENV GO111MODULE=on
 COPY repo /repo
 WORKDIR /repo
 RUN go build
 
-FROM chromedp/headless-shell:128.0.6601.2
+FROM chromedp/headless-shell:132.0.6834.15
 
 LABEL org.opencontainers.image.source "https://github.com/davidecavestro/docker-gphotos-cdp"
 LABEL org.opencontainers.image.description "Download photos and videos from your account without loosing geo-location attributes"
