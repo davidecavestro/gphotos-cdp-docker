@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
       file \
       jq \
       ffmpeg \
+      bind9-dnsutils \
       && rm -rf /var/lib/apt/lists/*
 
 # Set the locale
