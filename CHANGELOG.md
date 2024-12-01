@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2024-12-01
+### :bug: Bug Fixes
+- [`a055649`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/a055649be5b052c46599a93d1aafb36fdecb684c) - try to use a supported version of headless shell and cdproto *(commit by [@davidecavestro](https://github.com/davidecavestro))*
+- [`6560ec2`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/6560ec219969707a571ed3d1351cbff0eb6bb45f) - no way to resolve names from CLI *(commit by [@davidecavestro](https://github.com/davidecavestro))*
+
+### :wrench: Chores
+- [`36d1240`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/36d124086fafd63f94035c606b462da8ee5207f9) - fix dockerhub readme path *(commit by [@davidecavestro](https://github.com/davidecavestro))*
+- [`f8e5c37`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/f8e5c37a96f14f5c4f3c0d324bce28815ff7829b) - bump up deps *(commit by [@davidecavestro](https://github.com/davidecavestro))*
+
+
 ## [1.2.0] - 2024-07-25
 ### :sparkles: New Features
 - [`96e0f44`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/96e0f4450ca826cf23160994a52007ede47d254d) - use fork with support for timeout control *(commit by [@davidecavestro](https://github.com/davidecavestro))*
@@ -24,3 +34,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [1.1.1]: https://github.com/davidecavestro/docker-gphotos-cdp/compare/1.1.0...1.1.1
 [1.2.0]: https://github.com/davidecavestro/gphotos-cdp-docker/compare/1.1.2...1.2.0
+[1.3.0]: https://github.com/davidecavestro/gphotos-cdp-docker/compare/1.2.0...1.3.0
