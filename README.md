@@ -55,9 +55,9 @@ Optionally configure cron, i.e. for me running `crontab -l` reveals:
 0 20 * * * docker compose --project-name gphotos_family -f /path/to/gphotos/compose.yml up -d
 ```
 
-### Schedule with chadburn and expose a browser for relogins
+### Schedule with ofelia and expose a browser for relogins
 
-I currently prefer scheduling from [chadburn](https://github.com/PremoWeb/chadburn) container.
+I currently prefer scheduling from [ofelia job schedule](https://github.com/mcuadros/ofelia) container.
 I've also added a containerized browser, configured to share the profile, that can be used to
 renew the session when tokens expire. The _containerized browser_ is reachable at the specified
 port from the _host browser_, i.e. at http://localhost:3000.
@@ -68,7 +68,7 @@ version: "3"
 
 services:
   chadburn:
-    image: premoweb/chadburn:latest
+    image: mcuadros/ofelia:latest
     depends_on:
     - gphoto
     command: daemon
@@ -90,10 +90,10 @@ services:
     restart: no
     entrypoint: ["sleep", "99999d"]
     labels:
-      chadburn.enabled: "true"
-      chadburn.job-exec.synccron.schedule: "@hourly"
-      chadburn.job-exec.synccron.command: "date && /usr/local/bin/gphotos-cdp -v -dev -headless -dldir /download -run /usr/local/bin/save.sh"
-      chadburn.job-exec.synccron.no-overlap: "true"
+      ofelia.enabled: "true"
+      ofelia.job-exec.synccron.schedule: "@hourly"
+      ofelia.job-exec.synccron.command: "date && /usr/local/bin/gphotos-cdp -v -dev -headless -dldir /download -run /usr/local/bin/save.sh"
+      ofelia.job-exec.synccron.no-overlap: "true"
   chrome:
     image: kasmweb/chrome:1.15.0-rolling
     user: ${UID}:${GID}
