@@ -17,18 +17,18 @@ DEST_DIR='' : "${DEST_DIR:?DEST_DIR is not set}"
 IGNORE_REGEX="${IGNORE_REGEX:-.*(MV-PANO|COLLAGE|-ANIMATION|-EFFECTS)\..*)}"
 
 function do_image () {
-  local FILE=$1
-  local PARENT_DIR=$(dirname $FILE)
+  local FILE="$1"
+  local PARENT_DIR=$(dirname "$FILE")
 
   echo "PARENT_DIR: $PARENT_DIR"
 
   local creation_time=$(exiftool -DateTimeOriginal -d "%Y-%m-%d %H:%M:%S" "$FILE" | awk -F ': ' '{print $2}')
 
-  local filename=$(basename $FILE)
+  local filename=$(basename "$FILE")
   # If creation_time is not available, try getting it from filename
   if [[ -z "$creation_time" ]]; then
     # Use regex to match the encoded timestamp in the filename
-    if [[ $filename =~ ^.*([0-9]{8})_([0-9]{6}).* ]]; then
+    if [[ "$filename" =~ ^.*([0-9]{8})_([0-9]{6}).* ]]; then
       # Extract the encoded date and time
       encoded_date=${BASH_REMATCH[1]}
       encoded_time=${BASH_REMATCH[2]}
@@ -63,16 +63,16 @@ function do_image () {
   else
 
     # check if downloaded file has GPS data
-    local has_gps=$(exiftool $FILE | grep GPS)
+    local has_gps=$(exiftool "$FILE" | grep GPS)
 
     # set file time
-    exiftool "-DateTimeOriginal>FileModifyDate" $FILE
+    exiftool "-DateTimeOriginal>FileModifyDate" "$FILE"
 
     # move file to proper subdir
-    exiftool -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${DateTimeOriginal}' '-filename<${filename}' $FILE
+    exiftool -d "${PARENT_DIR}/%Y/%Y-%m" '-directory<${DateTimeOriginal}' '-filename<${filename}' "$FILE"
 
     # move to destination folder
-    cd $PARENT_DIR
+    cd "$PARENT_DIR"
 
     local new_filepath=$(find -name "$filename")
     local local_path=${new_filepath#"./"}
@@ -85,7 +85,7 @@ function do_image () {
     elif [[ -z "$has_gps" ]]; then
       echo "Checking if the overwrite of $obsoleted_file would cause loss of GPS data"
       # check if existing file has GPS data
-      local target_has_gps=$(exiftool $new_filepath | grep GPS)
+      local target_has_gps=$(exiftool "$new_filepath" | grep GPS)
       if [[ -z "$target_has_gps" ]]; then
         prevent_sync="target GPS data would be lost"
       fi
@@ -98,28 +98,28 @@ function do_image () {
         -av \
         --remove-source-files \
         --include='20[0-9][0-9]/' --include='20[0-9][0-9]/20[0-9][0-9]-[0-1][0-9]/' \
-        . $DEST_DIR
+        . "$DEST_DIR"
     else
       echo "No rsync as $prevent_sync"
     fi
   fi
 
-  rm -rf $PARENT_DIR
+  rm -rf "$PARENT_DIR"
 }
 
 function do_video () {
-  local FILE=$1
-  local PARENT_DIR=$(dirname $FILE)
+  local FILE="$1"
+  local PARENT_DIR=$(dirname "$FILE")
 
   echo "PARENT_DIR: $PARENT_DIR"
 
   local creation_time=$(ffprobe -v quiet -print_format json -show_entries format_tags=creation_time "$FILE" | jq -r '.format.tags.creation_time')
 
-  local filename=$(basename $FILE)
+  local filename=$(basename "$FILE")
   # If creation_time is not available, try getting it from filename
   if [[ "$creation_time" == "null" || -z "$creation_time" ]]; then
     # Use regex to match the encoded timestamp in the filename
-    if [[ $filename =~ ^FILE([0-9]{6})-([0-9]{6}) ]]; then
+    if [[ "$filename" =~ ^FILE([0-9]{6})-([0-9]{6}) ]]; then
       # Extract the encoded date and time
       encoded_date=${BASH_REMATCH[1]}
       encoded_time=${BASH_REMATCH[2]}
@@ -167,21 +167,21 @@ function do_video () {
     echo "Moved $FILE to $target_dir/"
 
     # move to destination folder
-    cd $PARENT_DIR
+    cd "$PARENT_DIR"
     rsync \
       -av \
       --remove-source-files \
       --include='20[0-9][0-9]/' --include='20[0-9][0-9]/20[0-9][0-9]-[0-1][0-9]/' \
-      . $DEST_DIR
+      . "$DEST_DIR"
 
   fi
 
-  rm -rf $PARENT_DIR
+  rm -rf "$PARENT_DIR"
 }
 
 # Check if the file matches the regex in IGNORE_REGEX
-base=$(basename $1)
-if [[ ! $base =~ $IGNORE_REGEX ]]; then
+base=$(basename "$1")
+if [[ ! "$base" =~ $IGNORE_REGEX ]]; then
   echo "Processing: $1"
   mimetype=$(file --mime-type --no-pad $1| awk '{print  $2}')
 
@@ -194,10 +194,10 @@ if [[ ! $base =~ $IGNORE_REGEX ]]; then
       ;;
     *)
       echo "$1 is neither an image nor a video"
-      rm -rf $(dirname $1)
+      rm -rf $(dirname "$1")
       ;;
   esac
 else
   echo "Discarding $1"
-  rm -rf $(dirname $1)
+  rm -rf $(dirname "$1")
 fi
