@@ -22,7 +22,7 @@ function do_image () {
 
   echo "PARENT_DIR: $PARENT_DIR"
 
-  local creation_time=$(exiftool -DateTimeOriginal -d "%Y-%m-%d %H:%M:%S" "$FILE" | awk -F ': ' '{print $2}')
+  local creation_time=$( exiftool -printFormat '$DateTimeOriginal' -DateTimeOriginal -d "%Y-%m-%d %H:%M:%S" "$FILE" )
 
   local filename=$(basename "$FILE")
   # If creation_time is not available, try getting it from filename
@@ -54,7 +54,7 @@ function do_image () {
     fi
   fi
 
-  creation_time=$(exiftool -DateTimeOriginal -d "%Y-%m-%d %H:%M:%S" "$FILE" | awk -F ': ' '{print $2}')
+  creation_time=$( exiftool -printFormat '$DateTimeOriginal' -DateTimeOriginal -d "%Y-%m-%d %H:%M:%S" "$FILE" )
 
   # If creation_time is not available, move it to root
   if [[ "$creation_time" == "null" || -z "$creation_time" ]]; then
@@ -183,7 +183,7 @@ function do_video () {
 base=$(basename "$1")
 if [[ ! "$base" =~ $IGNORE_REGEX ]]; then
   echo "Processing: $1"
-  mimetype=$(file --mime-type --no-pad $1| awk '{print  $2}')
+  mimetype=$(file --brief --mime-type "$1")
 
   case $mimetype in
     image/*)
