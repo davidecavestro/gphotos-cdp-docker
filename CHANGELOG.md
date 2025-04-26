@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-04-26
+### :bug: Bug Fixes
+- [`5de340a`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/5de340a024248e9273e3e94d57d13ea1e692827f) - quote filenames as they can contain spaces ( see [#2](https://github.com/davidecavestro/gphotos-cdp-docker/pull/2) ) *(commit by [@davidecavestro](https://github.com/davidecavestro))*
+- [`b898b8d`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/b898b8dc271c94b4aee62097cf7e41184ca680cb) - avoid using awk to support filenames with spaces ( see [#2](https://github.com/davidecavestro/gphotos-cdp-docker/pull/2) ) *(commit by [@davidecavestro](https://github.com/davidecavestro))*
+
+
 ## [1.3.0] - 2024-12-01
 ### :bug: Bug Fixes
 - [`a055649`](https://github.com/davidecavestro/gphotos-cdp-docker/commit/a055649be5b052c46599a93d1aafb36fdecb684c) - try to use a supported version of headless shell and cdproto *(commit by [@davidecavestro](https://github.com/davidecavestro))*
@@ -35,3 +41,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.1]: https://github.com/davidecavestro/docker-gphotos-cdp/compare/1.1.0...1.1.1
 [1.2.0]: https://github.com/davidecavestro/gphotos-cdp-docker/compare/1.1.2...1.2.0
 [1.3.0]: https://github.com/davidecavestro/gphotos-cdp-docker/compare/1.2.0...1.3.0
+[1.3.1]: https://github.com/davidecavestro/gphotos-cdp-docker/compare/1.3.0...1.3.1
