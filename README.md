@@ -138,6 +138,20 @@ docker run \
   -v -dev -headless -dldir /download -dltimeout 3 -run /usr/local/bin/save.sh
 ```
 
+## FAQs
+
+<dl>
+  <dt>
+    The container exits complaining <tt>Authentication not possible in -headless mode</tt>
+  </dt>
+  <dd>
+    This usually means that the session has been invalidated, so you have to relogin using a browser.
+    You can use any browser to relogin: the key point is using the same profile shared with the container.
+    For an example of containerized browser check https://github.com/davidecavestro/gphotos-cdp-docker/issues/1#issuecomment-2823168106.
+  </dd>
+</dl>
+
+
 ## Image project home
 
 https://github.com/davidecavestro/gphotos-cdp-docker
